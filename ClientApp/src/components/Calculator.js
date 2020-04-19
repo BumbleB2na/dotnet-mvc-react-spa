@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import CategorySelect from './CategorySelect';
+import ItemAdd from './ItemAdd';
 
 export class Calculator extends Component {
     static displayName = Calculator.name;
@@ -11,9 +11,13 @@ export class Calculator extends Component {
 
     componentDidMount() {
         this.populateCalculatorData();
-    }
+	}
+	
+	handleAddItem(newItem) {
+		alert('Add new item: ' + JSON.stringify(newItem));
+	}
 
-    static renderContent(categories, items) {
+    static renderContent(categories, items, handleAddItem) {
 		categories = categories.slice()
 			.sort((a, b) => a !== b ? a < b ? -1 : 1 : 0);
 		const itemsByCategory = new Array(categories.length);
@@ -49,9 +53,9 @@ export class Calculator extends Component {
 					})}
                 </ul>
 				<div>
-					<b>TOTAL: </b>${overallTotal.toFixed(2)}
+					<b>TOTAL: </b>${overallTotal.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
 				</div>
-				<CategorySelect categories={categories} />
+				<ItemAdd categories={categories} onAddItem={(newItem) => handleAddItem(newItem)} />
             </React.Fragment>
         );
     }
@@ -59,7 +63,7 @@ export class Calculator extends Component {
     render() {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : Calculator.renderContent(this.state.categories, this.state.items);
+            : Calculator.renderContent(this.state.categories, this.state.items, this.handleAddItem);
 
         return (
             <div>
