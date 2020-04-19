@@ -13,8 +13,44 @@ export class Calculator extends Component {
         this.populateCalculatorData();
 	}
 	
-	handleAddItem(newItem) {
-		alert('Add new item: ' + JSON.stringify(newItem));
+    async populateCalculatorData() {
+        let data;
+        try {
+			const response = await fetch('api/calculator');
+            data = await response.json();
+        }
+        catch (error) {
+            alert('There was a problem getting data');
+            return;
+        }
+        this.setState({ categories: data.categories, items: data.items, loading: false });
+    }
+	async handleAddItem(newItem) {
+		this.setState({ loading: true });
+        let data;
+        try {
+			const response = await fetch('api/items', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newItem)
+            });
+			data = await response.json();
+			if(data.status && data.status !== 200)
+				if(data.title)
+					throw new Error(data.title);
+				else
+					throw new Error();
+        }
+        catch (error) {
+            alert('There was a problem adding new item');
+			this.setState({ loading: false });
+            return;
+		}
+		let updatedItems = this.state.items.slice();
+		updatedItems.push(data);
+        this.setState({ items: updatedItems, loading: false });
 	}
 
     static renderContent(categories, items, handleAddItem) {
@@ -45,9 +81,9 @@ export class Calculator extends Component {
 						return (
 							<React.Fragment>
 								<li key={category}><b>{category.category} - ${category.totalValue.toFixed(2)}</b>
-								<uL>
+								<ul>
 									{itemRows}
-								</uL></li>
+								</ul></li>
 							</React.Fragment>
 						);
 					})}
@@ -63,18 +99,12 @@ export class Calculator extends Component {
     render() {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : Calculator.renderContent(this.state.categories, this.state.items, this.handleAddItem);
+            : Calculator.renderContent(this.state.categories, this.state.items, this.handleAddItem.bind(this));
 
         return (
             <div>
                 {contents}
             </div>
         );
-    }
-
-    async populateCalculatorData() {
-        const response = await fetch('api/calculator');
-        const data = await response.json();
-        this.setState({ categories: data.categories, items: data.items, loading: false });
     }
 }

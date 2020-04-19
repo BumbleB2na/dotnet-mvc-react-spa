@@ -27,7 +27,7 @@ export default class ItemAdd extends Component {
 
 		const newItem = {
 			"name": this.state.name,
-			"value": this.state.value,
+			"value": parseFloat(this.state.value),
 			"category": this.state.category
 		};
 		this.props.onAddItem(newItem);
@@ -39,9 +39,9 @@ export default class ItemAdd extends Component {
 	render() {
 		return (
 			<div>
-				<input type="text" placeholder="Item Name" required value={this.state.name} onChange={(e) => this.handleItemNameInput(e)}></input>
-				<input type="number" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" step="1.00" placeholder="$0.00" required value={this.state.value} onChange={(e) => this.handleValueInput(e)}></input>
-				<CategorySelect categories={this.props.categories} selected={this.state.category} onChange={(e) => this.handleCategorySelected(e)} />
+				<input type="text" placeholder="Item Name" required onChange={(e) => this.handleItemNameInput(e)}></input>
+				<input type="number" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" step="1.00" placeholder="$0.00" required onChange={(e) => this.handleValueInput(e)}></input>
+				<CategorySelect categories={this.props.categories} onChange={(e) => this.handleCategorySelected(e)} />
 				<button onClick={() => this.handleAddItemClick()}>Add</button>
 			</div>
 		);
