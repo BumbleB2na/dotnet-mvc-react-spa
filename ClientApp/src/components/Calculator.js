@@ -1,6 +1,8 @@
 ﻿import React, { Component } from 'react';
 import ItemAdd from './ItemAdd';
 import ItemRow from './ItemRow';
+import CalculatorService from './../services/CalculatorService';
+import ItemService from './../services/ItemService';
 
 export class Calculator extends Component {
     static displayName = Calculator.name;
@@ -14,62 +16,38 @@ export class Calculator extends Component {
         this.populateCalculatorData();
 	}
 	
-    async populateCalculatorData() {
-        let data;
-        try {
-			const response = await fetch('api/calculator');
-            data = await response.json();
-        }
-        catch (error) {
-            alert('There was a problem getting data');
-            return;
-        }
-        this.setState({ categories: data.categories, items: data.items, loading: false });
+    populateCalculatorData() {
+		CalculatorService.getData()
+			.then(data => {
+				this.setState({ categories: data.categories, items: data.items, loading: false });
+			})
+			.catch(error => {
+				alert('There was a problem getting data');
+				return;
+			});
     }
-	async handleAddItem(newItem) {
-        let data;
-        try {
-			const response = await fetch('api/items', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(newItem)
-            });
-			data = await response.json();
-			if(data.status && data.status !== 200)
-				if(data.title)
-					throw new Error(data.title);
-				else
-					throw new Error();
-        }
-        catch (error) {
-            alert('There was a problem adding new item');
-            return;
-		}
-		let updatedItems = this.state.items.slice();
-		updatedItems.push(data);
-        this.setState({ items: updatedItems, loading: false });
+	handleAddItem(newItem) {
+		ItemService.addItem(newItem)
+			.then(responseItem => {
+				let updatedItems = this.state.items.slice();
+				updatedItems.push(responseItem);
+				this.setState({ items: updatedItems, loading: false });
+			})
+			.catch(error => {
+				alert('There was a problem adding new item');
+				return;
+			});
 	}
-	async handleDeleteItem(itemId) {
-        let data;
-        try {
-			const response = await fetch('api/items/'+itemId, {
-                method: 'DELETE'
-            });
-			data = await response.json();
-			if(data.status && data.status !== 200)
-				if(data.title)
-					throw new Error(data.title);
-				else
-					throw new Error();
-        }
-        catch (error) {
-            alert('There was a problem deleting item');
-            return;
-		}
-		let updatedItems = this.state.items.filter(item => item.id !== itemId);
-        this.setState({ items: updatedItems, loading: false });
+	handleDeleteItem(itemId) {
+		ItemService.deleteItem(itemId)
+			.then(() => {
+				let updatedItems = this.state.items.filter(item => item.id !== itemId);
+				this.setState({ items: updatedItems, loading: false });
+			})
+			.catch(error => {
+				alert('There was a problem deleting item');
+				return;
+			});
 	}
 
     static renderContent(categories, items, handleAddItem, handleDeleteItem) {
@@ -91,7 +69,7 @@ export class Calculator extends Component {
 
         return (
             <React.Fragment>
-                <h4>Items</h4>
+                <h1>Calculator</h1>
                 <ul>
 					{itemsByCategory.map(category => {
 						const itemRows = category.items.map(item =>
