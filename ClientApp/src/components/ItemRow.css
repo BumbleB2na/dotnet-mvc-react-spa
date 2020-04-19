@@ -1,0 +1,8 @@
+.icon-button {
+	cursor: pointer;
+}
+.icon-button:hover,
+.icon-button:focus,
+.icon-button:active {
+	color: red;
+}

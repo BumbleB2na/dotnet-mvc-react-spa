@@ -1,5 +1,6 @@
 ﻿import React, { Component } from 'react';
 import ItemAdd from './ItemAdd';
+import ItemRow from './ItemRow';
 
 export class Calculator extends Component {
     static displayName = Calculator.name;
@@ -26,7 +27,6 @@ export class Calculator extends Component {
         this.setState({ categories: data.categories, items: data.items, loading: false });
     }
 	async handleAddItem(newItem) {
-		this.setState({ loading: true });
         let data;
         try {
 			const response = await fetch('api/items', {
@@ -45,15 +45,34 @@ export class Calculator extends Component {
         }
         catch (error) {
             alert('There was a problem adding new item');
-			this.setState({ loading: false });
             return;
 		}
 		let updatedItems = this.state.items.slice();
 		updatedItems.push(data);
         this.setState({ items: updatedItems, loading: false });
 	}
+	async handleDeleteItem(itemId) {
+        let data;
+        try {
+			const response = await fetch('api/items/'+itemId, {
+                method: 'DELETE'
+            });
+			data = await response.json();
+			if(data.status && data.status !== 200)
+				if(data.title)
+					throw new Error(data.title);
+				else
+					throw new Error();
+        }
+        catch (error) {
+            alert('There was a problem deleting item');
+            return;
+		}
+		let updatedItems = this.state.items.filter(item => item.id !== itemId);
+        this.setState({ items: updatedItems, loading: false });
+	}
 
-    static renderContent(categories, items, handleAddItem) {
+    static renderContent(categories, items, handleAddItem, handleDeleteItem) {
 		categories = categories.slice()
 			.sort((a, b) => a !== b ? a < b ? -1 : 1 : 0);
 		const itemsByCategory = new Array(categories.length);
@@ -76,7 +95,7 @@ export class Calculator extends Component {
                 <ul>
 					{itemsByCategory.map(category => {
 						const itemRows = category.items.map(item =>
-							<li key={item.id}>{item.name} - ${item.value.toFixed(2)}</li>
+							<ItemRow id={item.id} name={item.name} value={item.value} onDeleteItem={(itemId) => handleDeleteItem(itemId)} />
 						);
 						return (
 							<React.Fragment>
@@ -99,7 +118,7 @@ export class Calculator extends Component {
     render() {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : Calculator.renderContent(this.state.categories, this.state.items, this.handleAddItem.bind(this));
+            : Calculator.renderContent(this.state.categories, this.state.items, this.handleAddItem.bind(this), this.handleDeleteItem.bind(this));
 
         return (
             <div>

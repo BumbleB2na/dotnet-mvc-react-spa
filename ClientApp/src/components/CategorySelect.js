@@ -7,8 +7,8 @@ export default class CategorySelect extends Component {
 	
 	render() {
 		return (
-			<select onChange={(e) => this.props.onChange(e)}>
-				<option disabled selected required>-- Choose Category --</option>
+			<select required onChange={(e) => this.props.onChange(e)}>
+				<option disabled selected>-- Choose Category --</option>
 				{this.props.categories.map(category => {
 					return <option value={category}>{category}</option>;
 				})}
