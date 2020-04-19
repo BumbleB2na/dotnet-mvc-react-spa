@@ -1,4 +1,5 @@
 ﻿import React, { Component } from 'react';
+import CategorySelect from './CategorySelect';
 
 export class Calculator extends Component {
     static displayName = Calculator.name;
@@ -31,12 +32,6 @@ export class Calculator extends Component {
 
         return (
             <React.Fragment>
-				<h4>Categories</h4>
-				<ul>
-					{categories.map(category =>
-						<li key={category}>{category}</li>
-					)}
-				</ul>
                 <h4>Items</h4>
                 <ul>
 					{itemsByCategory.map(category => {
@@ -53,7 +48,10 @@ export class Calculator extends Component {
 						);
 					})}
                 </ul>
-				<b>TOTAL: </b>${overallTotal.toFixed(2)}
+				<div>
+					<b>TOTAL: </b>${overallTotal.toFixed(2)}
+				</div>
+				<CategorySelect categories={categories} />
             </React.Fragment>
         );
     }
