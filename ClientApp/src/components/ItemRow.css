@@ -6,3 +6,13 @@
 .icon-button:active {
 	color: red;
 }
+
+.col-padding-left {
+	padding-left: 20px;
+}
+.col-padding-right {
+	padding-right: 20px;
+}
+.col-align-right {
+	text-align: right;
+}
