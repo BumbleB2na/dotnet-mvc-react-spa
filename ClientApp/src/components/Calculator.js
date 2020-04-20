@@ -53,22 +53,6 @@ export class Calculator extends Component {
 	}
 
     static renderContent(categories, items, handleAddItem, handleDeleteItem) {
-		categories = categories.slice()
-			.sort((a, b) => a !== b ? a < b ? -1 : 1 : 0);
-		const itemsByCategory = new Array(categories.length);
-		categories.forEach((category, index) => {
-			const catItems = items.slice()
-				.filter(item => item.category === category)
-				.sort((a, b) => a.name !== b.name ? a.name < b.name ? -1 : 1 : 0);
-			const totalValue = catItems.reduce((a, b) => a + b.value, 0);
-			itemsByCategory[index] = {
-				"category": category,
-				"totalValue": totalValue,
-				"items": catItems
-			}
-		});
-		const overallTotal = items.reduce((a, b) => a + b.value, 0);
-
         return (
             <React.Fragment>
                 <h1>Calculator</h1>
