@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Row, Col } from 'reactstrap';
 import { FaTrash } from 'react-icons/fa';
 import './ItemRow.css';
+import ItemService from './../services/ItemService';
 
 export default class ItemRow extends Component {
     constructor(props) {
@@ -9,15 +10,16 @@ export default class ItemRow extends Component {
     }
 	
 	render() {
-		const isCategory = (!this.props.onDeleteItem);
-		if(isCategory) {
+		const currencyValue = ItemService.formatAsCurrency(this.props.value);
+		const isCategoryRow = (!this.props.onDeleteItem);
+		if(isCategoryRow) {
 			return (
 				<Row key={this.props.id}>
 					<Col xs="9">
 						{this.props.name}
 					</Col>
 					<Col xs="2" className="col-align-right col-padding-right">
-						${this.props.value.toFixed(2)}
+						{currencyValue}
 					</Col>
 				</Row>
 			);
@@ -28,7 +30,7 @@ export default class ItemRow extends Component {
 						{this.props.name}
 					</Col>
 					<Col xs="2" className="col-align-right">
-						${this.props.value.toFixed(2)}
+						{currencyValue}
 					</Col>
 					<Col xs="1">
 						<FaTrash className="icon-button" onClick={(e) => this.props.onDeleteItem(this.props.id)} />

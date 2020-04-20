@@ -36,4 +36,10 @@ export default class ItemService {
 		return data;
 	}
 
+	static formatAsCurrency(value) {
+		// E.g. 1000 becomes: "$1,000.00"
+		return '$'+value.toFixed(2)
+			.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	}
+
 }

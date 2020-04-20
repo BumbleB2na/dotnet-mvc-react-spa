@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ItemCategories from './ItemCategories';
+import ItemTotal from './ItemTotal';
 import ItemAdd from './ItemAdd';
 import ItemRow from './ItemRow';
 import CalculatorService from './../services/CalculatorService';
@@ -72,9 +73,7 @@ export class Calculator extends Component {
             <React.Fragment>
                 <h1>Calculator</h1>
 				<ItemCategories categories={categories} items={items} onDeleteItem={(itemId) => handleDeleteItem(itemId)} />
-				<div>
-					<b>TOTAL: </b>${overallTotal.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-				</div>
+				<ItemTotal items={items} />
 				<ItemAdd categories={categories} onAddItem={(newItem) => handleAddItem(newItem)} />
             </React.Fragment>
         );
