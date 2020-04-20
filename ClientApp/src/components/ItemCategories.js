@@ -11,7 +11,7 @@ export default class ItemCategories extends Component {
 		const categoriesOfItems = this.getCategoriesOfItems();
 		const contents = categoriesOfItems.map(category => {
 			return (
-				<Container>
+				<Container fluid={true}>
 					<ItemRow id={category.name} name={category.name} value={category.totalValue} onDeleteItem={false} />
 					{category.items.map(item => {
 						return (

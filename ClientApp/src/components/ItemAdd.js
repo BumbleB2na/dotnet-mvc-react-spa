@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Container, Row, Col, InputGroup, InputGroupAddon, Input, Button } from 'reactstrap';
 import CategorySelect from './CategorySelect';
 
 export default class ItemAdd extends Component {
@@ -21,7 +22,7 @@ export default class ItemAdd extends Component {
 			&& this.state.value !== null
 			&& this.state.category !== null);
 		if(!isValid) {
-			alert('You must enter an item name, a monetary value and choose a category. Please enter in all details for a new item then try again');
+			await this.props.onAddItem();
 			return;
 		}
 
@@ -38,17 +39,35 @@ export default class ItemAdd extends Component {
 	}
 	
 	render() {
-		if(!this.state.processing) {
-			return (
-				<div>
-					<input type="text" placeholder="Item Name" required onChange={(e) => this.handleItemNameInput(e)}></input>
-					<input type="number" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" step="1.00" placeholder="$0.00" required onChange={(e) => this.handleValueInput(e)}></input>
-					<CategorySelect categories={this.props.categories} onChange={(e) => this.handleCategorySelected(e)} />
-					<button onClick={() => this.handleAddItemClick()} disabled={this.state.processing}>Add</button>
-				</div>
-			);
-		} else
+		if(this.state.processing)
 			return null;
+		return (
+			<Container style={{paddingTop: 20, paddingBottom: 20}} fluid={true}>
+				<Row>
+					<h2>Add Item</h2>
+				</Row>
+				<Row>
+					<Col>
+						<InputGroup>
+							<Input placeholder="Item Name" type="text" required onChange={(e) => this.handleItemNameInput(e)} />
+						</InputGroup>
+					</Col>
+					<Col>
+						<InputGroup>
+							<InputGroupAddon addonType="prepend">$</InputGroupAddon>
+							<Input placeholder="0" min={0} max={99999999} type="number" step="1" required onChange={(e) => this.handleValueInput(e)} />
+							<InputGroupAddon addonType="append">.00</InputGroupAddon>
+						</InputGroup>
+					</Col>
+					<Col>
+						<CategorySelect categories={this.props.categories} onChange={(e) => this.handleCategorySelected(e)} />
+					</Col>
+					<Col>
+						<Button color="primary" block onClick={() => this.handleAddItemClick()} disabled={this.state.processing}>Add</Button>
+					</Col>
+				</Row>
+			</Container>
+		);
 	}
 
 }

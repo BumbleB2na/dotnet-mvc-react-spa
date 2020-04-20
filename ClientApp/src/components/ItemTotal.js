@@ -12,7 +12,7 @@ export default class ItemTotal extends Component {
 			.reduce((a, b) => a + b.value, 0);
 			
 		return (
-			<Container>
+			<Container fluid={true}>
 				<ItemRow id="total" name="TOTAL" value={totalValue} onDeleteItem={false} />
 			</Container>
 		);
