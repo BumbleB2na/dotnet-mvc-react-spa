@@ -26,30 +26,27 @@ export class Calculator extends Component {
 			})
 			.catch(error => {
 				this.setState({ alert: { type: "warning", message: "There was a problem getting data" }});
-				return;
 			});
     }
 	handleAddItem(newItem) {
 		ItemService.addItem(newItem)
 			.then(responseItem => {
-				let updatedItems = this.state.items.slice();
+				const updatedItems = this.state.items.slice();
 				updatedItems.push(responseItem);
 				this.setState({ items: updatedItems, alert: { type: "success", message: "Calculation updated" }});
 			})
 			.catch(error => {
 				this.setState({ alert: { type: "warning", message: "Item could not be added. Please complete each field then try again." }});
-				return;
 			});
 	}
 	handleDeleteItem(itemId) {
 		ItemService.deleteItem(itemId)
 			.then(() => {
-				let updatedItems = this.state.items.filter(item => item.id !== itemId);
+				const updatedItems = this.state.items.filter(item => item.id !== itemId);
 				this.setState({ items: updatedItems, alert: { type: "success", message: "Calculation updated" }});
 			})
 			.catch(error => {
 				this.setState({ alert: { type: "warning", message: "There was a problem deleting item" }});
-				return;
 			});
 	}
 
