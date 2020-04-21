@@ -16,11 +16,6 @@ ASP.NET Core 3.1 web application with a React frontend Single Page Application (
 Run the project from Visual Studio to run the MVC web application/Api and its React frontend.
 
 
-## Testing
-
-To test React components: Navigate to React SPA folder via command line then run: ```npm run test```
-
-
 ## Project History
 
 1. Used Visual Studio to create new ASP.NET Core 3.1 project, "DotNetMVC" using React.js project template with no authentication.
