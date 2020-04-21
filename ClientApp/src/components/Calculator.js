@@ -54,6 +54,7 @@ export class Calculator extends Component {
         return (
             <React.Fragment>
                 <h1>Calculator</h1>
+				<p>Calculate the total of your high-value items:</p>
 				<ItemCategories categories={categories} items={items} onDeleteItem={(itemId) => handleDeleteItem(itemId)} />
 				<ItemTotal items={items} />
 				<ItemAdd categories={categories} onAddItem={(newItem) => handleAddItem(newItem)} />
