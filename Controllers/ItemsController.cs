@@ -14,58 +14,49 @@ namespace DotNetMVCReact.Controllers
     [ApiController]
     public class ItemsController : ControllerBase
     {
-        private readonly CalculatorContext _context;
+        private readonly IItemRepository itemRepository;
 
-        public ItemsController(CalculatorContext context)
+        public ItemsController(IItemRepository itemRepository)
         {
-            _context = context;
+            this.itemRepository = itemRepository;
         }
 
         // GET: api/Items
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Item>>> GetItems()
+        public async Task<IEnumerable<Item>> GetItems()
         {
-            return await _context.Items.ToListAsync();
+            IEnumerable<Item> items = await itemRepository.GetItems();
+            return items;
         }
 
         // POST: api/Items
         [HttpPost]
-        public async Task<ActionResult<Item>> PostItem([Bind( // prevent from overposting
+        public async Task<ActionResult> PostItem([Bind( // prevent from overposting
             "Name,Value,Category")] Item item)
         {
-            try
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
-                {
-                    _context.Items.Add(item);
-                    await _context.SaveChangesAsync();
-                    return CreatedAtAction("GetItem", new { id = item.ID }, item);
-                }
+                item = await itemRepository.InsertItem(item);
+                return CreatedAtAction("GetItem", new { id = item.ID }, item);
             }
-            catch (DbUpdateException /* ex */)
-            {
-                //Log the error (uncomment ex variable name and write a log.
-                ModelState.AddModelError("", "Unable to save changes. " +
-                    "Try again, and if the problem persists " +
-                    "see your system administrator.");
-            }
-            return NoContent();
+            return BadRequest("Unable to save changes.");
         }
 
         // DELETE: api/Items/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Item>> DeleteItem(int id)
+        public async Task<ActionResult> DeleteItem(int id)
         {
-            var item = await _context.Items.FindAsync(id);
+            Item item = await itemRepository.GetItemByID(id);
             if (item == null)
             {
                 return NotFound();
             }
-
-            _context.Items.Remove(item);
-            await _context.SaveChangesAsync();
-
-            return item;
+            bool success = await itemRepository.DeleteItem(item);
+            if (success)
+            {
+                return AcceptedAtAction("DeleteItem", item);
+            }
+            return BadRequest("Unable to save changes.");
         }
     }
 }

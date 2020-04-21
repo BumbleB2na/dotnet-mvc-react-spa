@@ -14,11 +14,10 @@ namespace DotNetMVCReact.Controllers
     [Route("api/[controller]")]
     public class CalculatorController : Controller
     {
-        private readonly CalculatorContext _context;
-
-        public CalculatorController(CalculatorContext context)
+        private readonly IItemRepository itemRepository;
+        public CalculatorController(IItemRepository itemRepository)
         {
-            _context = context;
+            this.itemRepository = itemRepository;
         }
 
         [HttpGet]
@@ -27,7 +26,7 @@ namespace DotNetMVCReact.Controllers
             CalculatorViewModel calculatorViewModel = new CalculatorViewModel()
             {
                 Categories = Enum.GetNames(typeof(CategoryEnum)).ToArray(),
-                Items = await _context.Items.ToListAsync()
+                Items = await itemRepository.GetItems()
             };
 
             return Json(calculatorViewModel);

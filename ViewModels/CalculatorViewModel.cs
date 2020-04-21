@@ -10,6 +10,6 @@ namespace DotNetMVCReact.ViewModels
     {
         public string[] Categories { get; set; }
 
-        public ICollection<Item> Items { get; set; }
+        public IEnumerable<Item> Items { get; set; }
     }
 }

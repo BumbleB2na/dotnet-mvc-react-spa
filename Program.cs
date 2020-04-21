@@ -14,6 +14,8 @@ namespace DotNetMVCReact
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
+
+            // Initialize database context here if wanting to seed database - https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/intro?view=aspnetcore-3.1#initialize-db-with-test-data
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
