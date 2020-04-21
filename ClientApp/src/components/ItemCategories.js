@@ -49,7 +49,7 @@ export default class ItemCategories extends Component {
 		return (a < b) ? -1 : (a > b) ? 1 : 0;
 	}
 	sortAlphabeticallyByName(a, b) {
-		return (a.name > b.name) ? -1 : (a.name < b.name) ? 1 : 0;
+		return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0;
 	}
 
 }
