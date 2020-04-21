@@ -46,10 +46,10 @@ export default class ItemCategories extends Component {
 		return categoriesOfItems;
 	}
 	sortAlphabetically(a, b) {
-		return a !== b ? a < b ? -1 : 1 : 0;
+		return (a < b) ? -1 : (a > b) ? 1 : 0;
 	}
 	sortAlphabeticallyByName(a, b) {
-		return a.name || a !== b.name || b ? a.name || a < b.name || b ? -1 : 1 : 0;
+		return (a.name > b.name) ? -1 : (a.name < b.name) ? 1 : 0;
 	}
 
 }
